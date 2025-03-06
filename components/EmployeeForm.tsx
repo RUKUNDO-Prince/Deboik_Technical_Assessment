@@ -1,101 +1,83 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 
-const EmployeeForm = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [role, setRole] = useState<"Admin" | "Staff">("Staff");
-  const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+interface Employee {
+  _id?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  role: string;
+}
+
+interface Props {
+  employee?: Employee | null;
+  onClose: () => void;
+}
+
+const EmployeeForm: React.FC<Props> = ({ employee, onClose }) => {
+  const [formData, setFormData] = useState<Employee>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    role: "Staff",
+  });
+
+  useEffect(() => {
+    if (employee) {
+      setFormData(employee);
+    }
+  }, [employee]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setSuccessMessage(null);
-
-    const newEmployee = { firstName, lastName, email, phone, role };
+    const method = employee ? "PUT" : "POST";
+    const url = employee ? `/api/employees/${employee._id}` : "/api/employees";
 
     try {
-      const response = await fetch("/api/employees/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newEmployee),
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to add employee");
-      }
+      if (!response.ok) throw new Error("Failed to save employee");
 
-      setSuccessMessage("Employee added successfully!");
-
-      // Clear the form
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setPhone("");
-      setRole("Staff");
+      onClose(); // Hide form after submission
     } catch (error) {
-      setError(error.message);
+      console.error("Error:", error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {error && <p className="text-red-500">{error}</p>}
-      {successMessage && <p className="text-green-500">{successMessage}</p>}
-      <input
-        type="text"
-        placeholder="First Name"
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
-        className="p-2 border border-gray-300 rounded w-full"
-        required
-      />
-      <input
-        type="text"
-        placeholder="Last Name"
-        value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
-        className="p-2 border border-gray-300 rounded w-full"
-        required
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="p-2 border border-gray-300 rounded w-full"
-        required
-      />
-      <input
-        type="text"
-        placeholder="Phone"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        className="p-2 border border-gray-300 rounded w-full"
-        required
-      />
-      <label htmlFor="role" className="block text-sm font-medium text-gray-700">
-        Role
-      </label>
-      <select
-        id="role"
-        value={role}
-        onChange={(e) => setRole(e.target.value as "Admin" | "Staff")}
-        className="p-2 border border-gray-300 rounded w-full"
-      >
-        <option value="Admin">Admin</option>
-        <option value="Staff">Staff</option>
-      </select>
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-        Add Employee
-      </button>
-    </form>
+    <div className="border p-4 rounded mb-4">
+      <h2 className="text-xl font-bold mb-2">{employee ? "Edit Employee" : "Add Employee"}</h2>
+      <form onSubmit={handleSubmit} className="space-y-2">
+        <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} className="border p-2 w-full" required />
+        <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} className="border p-2 w-full" required />
+        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} className="border p-2 w-full" required />
+        <input type="text" name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} className="border p-2 w-full" required />
+        <label htmlFor="role" className="block text-sm font-medium text-gray-700">Role</label>
+        <select id="role" name="role" value={formData.role} onChange={handleChange} className="border p-2 w-full" required>
+          <option value="Staff">Staff</option>
+          <option value="Admin">Admin</option>
+        </select>
+        <div className="flex space-x-2">
+          <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
+            {employee ? "Update" : "Add"}
+          </button>
+          <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 
