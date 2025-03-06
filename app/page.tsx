@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useContext, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import EmployeeForm from "../components/EmployeeForm";
 import EmployeeList from "../components/EmployeeList";
 import { AuthContext } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 
 const Home = () => {
@@ -13,6 +13,7 @@ const Home = () => {
   
   const auth = useContext(AuthContext);
   const router = useRouter();
+  const { logout } = useAuthStore(); // Fetch logout function at the top
 
   useEffect(() => {
     if (!auth?.user) {
@@ -21,6 +22,11 @@ const Home = () => {
   }, [auth, router]);
 
   if (!auth?.user) return null;
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
 
   const handleAddNew = () => {
     setSelectedEmployee(null);
@@ -43,7 +49,7 @@ const Home = () => {
       <button onClick={handleAddNew} className="px-4 py-2 bg-green-500 text-white rounded mb-4">
         Add New
       </button>
-      <button onClick={() => useAuthStore().logout()} className="px-4 py-2 bg-red-500 text-white rounded">
+      <button onClick={handleLogout} className="px-4 py-2 bg-red-500 text-white rounded">
         Logout
       </button>
 
