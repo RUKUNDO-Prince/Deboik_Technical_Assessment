@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 
 interface Employee {
@@ -16,13 +17,50 @@ interface Props {
   onClose: () => void;
 }
 
+const addEmployee = async (employee: Employee): Promise<Employee> => {
+  const response = await fetch("/api/employees", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(employee),
+  });
+  if (!response.ok) throw new Error("Failed to add employee");
+  return response.json();
+};
+
+const updateEmployee = async (employee: Employee): Promise<Employee> => {
+  const response = await fetch(`/api/employees/${employee._id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(employee),
+  });
+  if (!response.ok) throw new Error("Failed to update employee");
+  return response.json();
+};
+
 const EmployeeForm: React.FC<Props> = ({ employee, onClose }) => {
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState<Employee>({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
     role: "Staff",
+  });
+
+  const addMutation = useMutation({
+    mutationFn: addEmployee,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+      onClose();
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: updateEmployee,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+      onClose();
+    },
   });
 
   useEffect(() => {
@@ -35,23 +73,12 @@ const EmployeeForm: React.FC<Props> = ({ employee, onClose }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const method = employee ? "PUT" : "POST";
-    const url = employee ? `/api/employees/${employee._id}` : "/api/employees";
-
-    try {
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) throw new Error("Failed to save employee");
-
-      onClose(); // Hide form after submission
-    } catch (error) {
-      console.error("Error:", error);
+    if (employee) {
+      updateMutation.mutate(formData);
+    } else {
+      addMutation.mutate(formData);
     }
   };
 
@@ -70,7 +97,7 @@ const EmployeeForm: React.FC<Props> = ({ employee, onClose }) => {
         </select>
         <div className="flex space-x-2">
           <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
-            {employee ? "Update" : "Add"}
+            {employee ? updateMutation.status === 'pending' ? "Updating..." : "Update" : addMutation.status === 'pending' ? "Adding..." : "Add"}
           </button>
           <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded">
             Cancel

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import React, { useState } from "react";
 
 interface Employee {
   _id: string;
@@ -15,41 +16,42 @@ interface Props {
   onEdit: (employee: Employee) => void;
 }
 
+const fetchEmployees = async (): Promise<Employee[]> => {
+  const response = await fetch("/api/employees");
+  if (!response.ok) throw new Error("Failed to fetch employees");
+  return response.json();
+};
+
+const deleteEmployee = async (id: string) => {
+  const response = await fetch(`/api/employees/${id}`, { method: "DELETE" });
+  if (!response.ok) throw new Error("Failed to delete employee");
+};
+
 const EmployeeList: React.FC<Props> = ({ onEdit }) => {
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const { data: employees, isLoading, error } = useQuery({
+    queryKey: ["employees"],
+    queryFn: fetchEmployees,
+  });
 
-  useEffect(() => {
-    fetchEmployees();
-  }, []);
+  const deleteMutation = useMutation({
+    mutationFn: deleteEmployee,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+    },
+  });
 
-  const fetchEmployees = async () => {
-    try {
-      const response = await fetch("/api/employees");
-      if (!response.ok) throw new Error("Failed to fetch employees");
-      const data = await response.json();
-      setEmployees(data);
-    } catch (error) {
-      setError((error as Error).message);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
+  const handleDelete = (id: string) => {
     if (!window.confirm("Are you sure you want to delete this employee?")) return;
-
-    try {
-      const response = await fetch(`/api/employees/${id}`, { method: "DELETE" });
-      if (!response.ok) throw new Error("Failed to delete employee");
-      setEmployees((prev) => prev.filter((employee) => employee._id !== id));
-    } catch (error) {
-      setError((error as Error).message);
-    }
+    deleteMutation.mutate(id);
   };
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <div className="space-y-4">
-      {error && <p className="text-red-500">{error}</p>}
-      {employees.map((employee) => (
+      {error && <p className="text-red-500">{(error as Error).message}</p>}
+      {employees?.map((employee) => (
         <div key={employee._id} className="border p-4 rounded flex justify-between items-center">
           <div>
             <p className="font-bold">{employee.firstName} {employee.lastName}</p>
@@ -67,8 +69,9 @@ const EmployeeList: React.FC<Props> = ({ onEdit }) => {
             <button
               onClick={() => handleDelete(employee._id)}
               className="px-4 py-2 bg-red-500 text-white rounded"
+              disabled={deleteMutation.isLoading}
             >
-              Delete
+              {deleteMutation.isLoading ? "Deleting..." : "Delete"}
             </button>
           </div>
         </div>
