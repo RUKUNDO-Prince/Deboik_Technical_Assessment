@@ -31,6 +31,7 @@ export async function PUT(
       { status: 200 }
     );
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error: "Failed to update employee" },
       { status: 400 }
@@ -57,6 +58,7 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Employee deleted" }, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error: "Failed to delete employee" },
       { status: 400 }

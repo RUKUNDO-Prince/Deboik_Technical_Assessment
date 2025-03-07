@@ -26,6 +26,7 @@ export async function POST(req: Request) {
       { status: 201 }
     );
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error: "Failed to create employee" },
       { status: 400 }
@@ -40,6 +41,7 @@ export async function GET() {
     const employees = await Employee.find({});
     return NextResponse.json(employees, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: "Failed to fetch employees" }, { status: 400 });
   }
 }

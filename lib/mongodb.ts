@@ -14,13 +14,17 @@ interface MongooseGlobal {
 }
 
 declare global {
-  var mongoose: MongooseGlobal['mongoose'];
+  namespace NodeJS {
+    interface Global {
+      mongoose: MongooseGlobal['mongoose'];
+    }
+  }
 }
 
-let cached = global.mongoose;
+let cached: MongooseGlobal['mongoose'] = (globalThis as any).mongoose || { conn: null, promise: null };
 
 if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+  cached = (globalThis as any).mongoose = { conn: null, promise: null } as MongooseGlobal['mongoose'];
 }
 
 async function connectToDatabase() {

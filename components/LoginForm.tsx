@@ -30,6 +30,7 @@ const LoginForm = () => {
       router.replace("/");
     } catch (err) {
       setError("Invalid email or password.");
+      console.log(err);
     }
   };
 
@@ -74,7 +75,7 @@ const LoginForm = () => {
 
         {/* REGISTER LINK */}
         <p className="mt-4 text-center text-gray-600">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/register" className="text-[#2BDA53] hover:underline">
             Register here
           </Link>
