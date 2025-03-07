@@ -14,11 +14,13 @@ interface Employee {
   lastName: string;
   email: string;
   phone: string;
-  role: 'Admin' | 'Staff';
+  role: "Admin" | "Staff";
 }
 
 const Home = () => {
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
+    null
+  );
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const auth = useContext(AuthContext);
@@ -56,12 +58,14 @@ const Home = () => {
   return (
     <div className="flex flex-col bg-[#EEF2FF]/30">
       <Navbar />
-      <div className="flex h-screen">
+      <div className="flex">
         <Sidebar />
         {/* MAIN CONTENT */}
         <div className="p-8 w-full">
           <div className="flex flex-col lg:flex-row justify-between">
-            <h1 className="text-2xl font-bold mb-4 text-[#013C61]">Employees</h1>
+            <h1 className="text-2xl font-bold mb-4 text-[#013C61]">
+              Employees
+            </h1>
             <div className="">
               <button
                 onClick={handleAddNew}
@@ -83,12 +87,7 @@ const Home = () => {
             <p>62, Bode Thomas, Surulere, Lagos</p>
           </div>
 
-          {isFormOpen && (
-            <EmployeeForm
-              employee={selectedEmployee}
-              onClose={handleCloseForm}
-            />
-          )}
+          {isFormOpen && <EmployeeForm employee={selectedEmployee} onClose={handleCloseForm} />}
           <EmployeeList onEdit={handleEditEmployee} />
         </div>
       </div>

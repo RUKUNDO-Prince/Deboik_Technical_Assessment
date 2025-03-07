@@ -2,6 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
+import { IoMdClose } from "react-icons/io";
 
 interface Employee {
   _id?: string;
@@ -82,28 +83,135 @@ const EmployeeForm: React.FC<Props> = ({ employee, onClose }) => {
     }
   };
 
+  // Close modal when clicking outside
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="border p-4 rounded mb-4">
-      <h2 className="text-xl font-bold mb-2">{employee ? "Edit Employee" : "Add Employee"}</h2>
-      <form onSubmit={handleSubmit} className="space-y-2">
-        <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} className="border p-2 w-full" required />
-        <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} className="border p-2 w-full" required />
-        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} className="border p-2 w-full" required />
-        <input type="text" name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} className="border p-2 w-full" required />
-        <label htmlFor="role" className="block text-sm font-medium text-gray-700">Role</label>
-        <select id="role" name="role" value={formData.role} onChange={handleChange} className="border p-2 w-full" required>
-          <option value="Staff">Staff</option>
-          <option value="Admin">Admin</option>
-        </select>
-        <div className="flex space-x-2">
-          <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
-            {employee ? updateMutation.status === 'pending' ? "Updating..." : "Update" : addMutation.status === 'pending' ? "Adding..." : "Add"}
-          </button>
-          <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded">
-            Cancel
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={handleBackdropClick}>
+      <div className="w-full max-w-md bg-white rounded-lg shadow-xl animate-fadeIn" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between p-6 border-b">
+          <h2 className="text-xl font-bold text-[#013C61]">
+            {employee ? "Edit Employee" : "Add New Employee"}
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 transition-colors"
+            title="Close"
+          >
+            <IoMdClose size={24} />
           </button>
         </div>
-      </form>
+
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <div className="space-y-1">
+            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+              First Name
+            </label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              placeholder="Enter first name"
+              value={formData.firstName}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              required
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+              Last Name
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              placeholder="Enter last name"
+              value={formData.lastName}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              required
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="example@company.com"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              required
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+              Phone Number
+            </label>
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              placeholder="+234 000 0000 000"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              required
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+              Role
+            </label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              required
+            >
+              <option value="Staff">Staff</option>
+              <option value="Admin">Admin</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 pt-4">
+            <button
+              type="submit"
+              className="px-6 py-2 bg-[#2BDA53] text-white font-medium rounded-md hover:bg-green-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 w-full sm:w-auto"
+              disabled={addMutation.status === 'pending' || updateMutation.status === 'pending'}
+            >
+              {employee
+                ? updateMutation.status === 'pending'
+                  ? "Updating..."
+                  : "Update Employee"
+                : addMutation.status === 'pending'
+                  ? "Adding..."
+                  : "Add Employee"}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-2 bg-gray-100 text-gray-700 font-medium rounded-md hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 w-full sm:w-auto"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

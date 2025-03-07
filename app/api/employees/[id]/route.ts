@@ -1,29 +1,27 @@
-"use server";
-
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 import Employee from "@/models/Employee";
 
+// @ts-expect-error
+// 
 // EDIT A RECORD
 export async function PUT(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   await connectToDatabase();
 
   try {
+    const { id } = params;
     const { firstName, lastName, email, phone, role } = await req.json();
     const updatedEmployee = await Employee.findByIdAndUpdate(
-      params.id,
+      id, 
       { firstName, lastName, email, phone, role },
       { new: true }
     );
 
     if (!updatedEmployee) {
-      return NextResponse.json(
-        { error: "Employee not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Employee not found" }, { status: 404 });
     }
 
     return NextResponse.json(
@@ -31,7 +29,7 @@ export async function PUT(
       { status: 200 }
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to update employee" },
       { status: 400 }
@@ -41,24 +39,22 @@ export async function PUT(
 
 // DELETE A RECORD
 export async function DELETE(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   await connectToDatabase();
 
   try {
-    const deletedEmployee = await Employee.findByIdAndDelete(params.id);
+    const { id } = params;
+    const deletedEmployee = await Employee.findByIdAndDelete(id);
 
     if (!deletedEmployee) {
-      return NextResponse.json(
-        { error: "Employee not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Employee not found" }, { status: 404 });
     }
 
     return NextResponse.json({ message: "Employee deleted" }, { status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to delete employee" },
       { status: 400 }
