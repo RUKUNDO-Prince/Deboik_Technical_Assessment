@@ -9,8 +9,16 @@ import { useAuthStore } from "@/store/authStore";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
 
+interface Employee {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  role: 'Admin' | 'Staff';
+}
+
 const Home = () => {
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const auth = useContext(AuthContext);
@@ -35,7 +43,7 @@ const Home = () => {
     setIsFormOpen(true);
   };
 
-  const handleEditEmployee = (employee: any) => {
+  const handleEditEmployee = (employee: Employee) => {
     setSelectedEmployee(employee);
     setIsFormOpen(true);
   };
