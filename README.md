@@ -1,205 +1,194 @@
-# Deboik Technical Assessment
+# Full-Stack Developer Internship – Technical Assessment Implementation
+(Next.js | React | MongoDB | Full-Stack Development)  
 
-## Introduction
+## Introduction  
 
-The Deboik Technical Assessment is a project developed by [RUKUNDO Prince](https://github.com/RUKUNDO-Prince) as part of a technical evaluation. This project showcases Prince's proficiency in various programming languages and technologies, reflecting his commitment to delivering efficient and effective solutions.
+This project is a **Full-Stack Developer Technical Assessment** for a **Full-Stack Developer Internship** position. It is a **CRUD-based Employee Record Web App** built using **Next.js, React, MongoDB, and Tailwind CSS**.  
 
-## Table of Contents
+The assessment required implementing **CRUD operations, authentication using NextAuth.js**, and ensuring **error handling, validation, and server-side rendering (SSR) or static site generation (SSG)**.  
 
-- [Deboik Technical Assessment](#deboik-technical-assessment)
+## Table of Contents  
+- [Full-Stack Developer Internship – Technical Assessment Implementation](#full-stack-developer-internship--technical-assessment-implementation)
   - [Introduction](#introduction)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+    - [Steps](#steps)
   - [Running the Project](#running-the-project)
   - [Main Features](#main-features)
-  - [Approaches Used](#approaches-used)
-  - [Technologies](#technologies)
-  - [Dependencies](#dependencies)
-  - [Configuration](#configuration)
-  - [Documentation](#documentation)
-  - [Examples](#examples)
+    - [Task 1: Build a Simple CRUD App (Next.js \& MongoDB)](#task-1-build-a-simple-crud-app-nextjs--mongodb)
+    - [Task 2: Implement Authentication (NextAuth.js)](#task-2-implement-authentication-nextauthjs)
+  - [Approach](#approach)
+  - [Technologies Used](#technologies-used)
+  - [API Routes](#api-routes)
+  - [Authentication](#authentication)
+  - [Validation \& Error Handling](#validation--error-handling)
+  - [Deployment](#deployment)
   - [Troubleshooting](#troubleshooting)
-  - [Contributors](#contributors)
-  - [License](#license)
+    - [Common Issues](#common-issues)
 
-## Installation
+---
 
-To set up the project locally, follow these steps:
+## Installation  
 
-1. **Clone the repository:**
+### Prerequisites  
+Ensure you have the following installed:  
+- [Node.js](https://nodejs.org/)  
+- [MongoDB](https://www.mongodb.com/) (Locally or MongoDB Atlas)  
+- [Git](https://git-scm.com/)  
+
+### Steps  
+
+1. **Clone the repository**  
 
    ```bash
    git clone https://github.com/RUKUNDO-Prince/Deboik_Technical_Assessment.git
-   ```
-
-2. **Navigate to the project directory:**
-
-   ```bash
    cd Deboik_Technical_Assessment
    ```
 
-3. **Install the necessary dependencies:**
+2. **Install dependencies**  
 
-   - For Node.js projects:
+   ```bash
+   npm install
+   ```
 
-     ```bash
-     npm install
-     ```
+3. **Set up environment variables**  
+   Create a `.env.local` file in the root directory and add the following:  
 
-   - For Python projects:
+   ```env
+   MONGODB_URI=your_mongodb_connection_string
+   JWT_SECRET=your_secret_key
+   ```
 
-     ```bash
-     pip install -r requirements.txt
-     ```
+4. **Run the development server**  
 
-   - For Java projects:
+   ```bash
+   npm run dev
+   ```
 
-     Ensure you have Maven installed, then run:
+   The app will be available at `http://localhost:3000`.  
 
-     ```bash
-     mvn install
-     ```
+---
 
-   - For C/C++ projects:
+## Running the Project  
 
-     Ensure you have the necessary compilers installed. Refer to the specific build instructions provided in the project.
-
-## Running the Project
-
-Depending on the project's primary language and framework:
-
-- **Node.js/Express:**
-
+- **Start the Next.js app**  
   ```bash
-  npm start
+  npm run dev
+  ```
+- **Run in production mode**  
+  ```bash
+  npm run build && npm start
   ```
 
-- **Python/Django:**
+---
 
-  ```bash
-  python manage.py runserver
-  ```
+## Main Features  
 
-- **Java/Spring Boot:**
+### Task 1: Build a Simple CRUD App (Next.js & MongoDB)  
 
-  ```bash
-  mvn spring-boot:run
-  ```
+✅ **Create an Employee Record** (Firstname, LastName, Email, Phone, Role: Admin/Staff)  
+✅ **Read** all records and display them in a list  
+✅ **Update** the First Name, LastName, Phone  
+✅ **Delete** a record  
 
-- **C/C++:**
+**Requirements Met:**  
+✔ Used **Next.js API routes** for CRUD operations  
+✔ Stored records in **MongoDB** with **Mongoose schema**  
+✔ Built the UI with **React & Tailwind CSS**  
+✔ Implemented **Server-Side Rendering (SSR) & Static Site Generation (SSG)**  
+✔ Added **error handling & form validation**  
 
-  Compile the source code using the appropriate compiler and execute the binary.
+### Task 2: Implement Authentication (NextAuth.js)  
 
-## Main Features
+✅ **Users can sign up, log in, and log out**  
+✅ **Only logged-in users can manage records**  
+✅ **Implemented JWT-based authentication using NextAuth.js**  
 
-- **Feature 1:** Description of the first main feature.
-- **Feature 2:** Description of the second main feature.
-- **Feature 3:** Description of the third main feature.
+---
 
-*Note: Specific features should be detailed based on the project's functionality.*
+## Approach  
 
-## Approaches Used
+1. **Full-Stack with Next.js API Routes**  
+   - Utilized Next.js API routes for backend functionality.  
+   - Ensured proper routing, middleware, and authentication handling.  
 
-The project employs the following methodologies:
+2. **MongoDB with Mongoose**  
+   - Created a structured Employee Schema with Mongoose.  
+   - Used MongoDB Atlas for cloud database storage.  
 
-- **Agile Development:** Iterative development with continuous feedback.
-- **Test-Driven Development (TDD):** Writing tests before code to ensure functionality.
-- **Modular Design:** Breaking down the system into interchangeable modules for scalability and maintainability.
+3. **Server-Side Rendering (SSR) & Static Site Generation (SSG)**  
+   - Used `getServerSideProps()` for dynamic content fetching.  
+   - Optimized performance with `getStaticProps()` where applicable.  
+   - Used react-query and tanstack for faster data fetching and retrieval
 
-## Technologies
+4. **Authentication with NextAuth.js**  
+   - Implemented email/password authentication.  
+   - Secured API routes by checking session authentication.  
 
-The project leverages a diverse tech stack:
+5. **Clean UI with Tailwind CSS**  
+   - Built a modern and responsive UI using Tailwind CSS.  
+   - Ensured a clean user experience.  
 
-- **Frontend:**
+---
 
-  - JavaScript frameworks: Vue.js, React, Three.js, Next.js
-  - CSS frameworks: Material UI, Bootstrap, Tailwind, Chakra UI, Daisy UI
+## Technologies Used  
 
-- **Backend:**
+- **Frontend:** Next.js, React, Tailwind CSS  
+- **Backend:** Next.js API Routes  
+- **Database:** MongoDB  
+- **Authentication:** NextAuth.js (JWT-based authentication)  
+- **Deployment:** Vercel  
 
-  - JavaScript: Node.js, Express.js, TypeScript
-  - Python: Django, FastAPI
-  - Java: Spring Boot
-  - PHP
+---
 
-- **Mobile Development:**
+## API Routes  
 
-  - Firebase
-  - React Native
-  - Swift
-  - Kotlin
+| Route             | Method | Description                | Auth Required |
+|------------------|--------|---------------------------|--------------|
+| `/api/employees` | `GET`  | Get all employee records  | ✅ |
+| `/api/employees` | `POST` | Add a new employee        | ✅ |
+| `/api/employees/:id` | `PUT`  | Update an employee        | ✅ |
+| `/api/employees/:id` | `DELETE` | Delete an employee        | ✅ |
+| `/api/auth/register` | `POST` | Register a new user |  ✅ |
+| `/api/auth/login` | `POST` | Login a user |  ✅ |
+| `/api/auth/logout` | `POST` | Logout a user |  ✅ |
 
-- **Databases:**
+---
 
-  - MongoDB
-  - MySQL
-  - PostgreSQL
+## Authentication  
 
-- **Miscellaneous:**
+- Implemented authentication with **NextAuth.js**.  
+- Users must be logged in to manage employee records.  
+- Protected routes using `getSession()` from NextAuth.  
 
-  - Firebase
-  - Socket.IO
-  - Sanity
-  - OpenCV
-  - SuiteApp
-  - Appwrite
+---
 
-## Dependencies
+## Validation & Error Handling  
 
-Key dependencies include:
+- Used **Zod & Yup** for form validation.  
+- Implemented error handling in API routes with `try/catch` blocks.  
 
-- **Node.js Projects:**
+---
 
-  - Express.js
-  - Mongoose (for MongoDB integration)
-  - Sequelize (for SQL databases)
+## Deployment  
 
-- **Python Projects:**
+The project is deployed on **Vercel**.  
+[🔗 View Live Project](https://deboik-technical-assessment.vercel.app/login) 
 
-  - Django Rest Framework
-  - SQLAlchemy
-  - Celery
+---
 
-- **Java Projects:**
+## Troubleshooting  
 
-  - Spring Boot Starter Web
-  - Hibernate
+### Common Issues  
+1. **MongoDB Connection Issues**  
+   - Ensure **MONGODB_URI** in `.env.local` is correct.  
+   - Restart the server after changing environment variables.  
 
-*Note: Refer to the `package.json`, `requirements.txt`, or `pom.xml` for a comprehensive list.*
+2. **Authentication Not Working?**  
+   - Make sure **JWT_SECRET** is set correctly.  
+   - Check browser cookies and local storage.  
 
-## Configuration
+For additional help, open an issue on GitHub.  
 
-Configuration settings can be adjusted in the following files:
-
-- **Node.js:** `.env`
-- **Python:** `settings.py`
-- **Java:** `application.properties` or `application.yml`
-
-Ensure you set the appropriate environment variables and database connection strings before running the project.
-
-## Documentation
-
-Detailed documentation is available in the `docs` directory. It includes:
-
-- API endpoints and usage
-- Module descriptions
-- Code architecture and design patterns
-- Contribution guidelines
-
-## Examples
-
-Example usage scenarios and code snippets are provided in the `examples` directory. These examples demonstrate how to interact with the system, utilize APIs, and integrate with other services.
-
-## Troubleshooting
-
-Common issues and their resolutions are documented in the `troubleshooting.md` file. For additional support, please open an issue in the repository or contact the maintainer.
-
-## Contributors
-
-- **RUKUNDO Prince:** [GitHub Profile](https://github.com/RUKUNDO-Prince)
-
-Contributions are welcome. Please refer to the contribution guidelines in the `CONTRIBUTING.md` file.
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
+---
